@@ -1,3 +1,17 @@
-<div fxFlex fxLayout="column">
-  <agm-map style="height:100%" [zoom]="3"></agm-map>
-</div>
+<md-toolbar color="primary">
+  <h1>Mappit</h1>
+  <div fxFlex></div>
+  <button *ngIf="(sidenavMode | async) === 'over'" (click)="sidenavToggleClick$.next($event)" md-button> <md-icon svgIcon="menu"></md-icon> </button>
+  <app-login-button></app-login-button>
+</md-toolbar>
+
+<md-sidenav-container (backdropClick)="sidenavCloseRequest$.next($event)" fxFlex>
+  <md-sidenav [mode]='sidenavMode | async' [opened]="sidenavOpen$ | async" fxLayout="column" #sidenav>
+    <app-sidenav [posts]="posts$ | async" (routeClick)="sidenavCloseRequest$.next($event)" fxLayout="column" fxFlex></app-sidenav>
+  </md-sidenav>
+  <div style="height: 100%; display: flex">
+    <div id="Router-parent-thingy" style="display: flex; flex: 1; flex-direction:column; min-width: 0;">
+      <agm-map style="height:100%" [zoom]="3"></agm-map>
+    </div>
+  </div>
+</md-sidenav-container>

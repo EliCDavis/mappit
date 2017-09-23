@@ -1,0 +1,8 @@
+<button md-button *ngIf="(loggedIn$ | async) === false" (click)="login()">LOGIN</button>
+<img *ngIf="(userImage$ | async) !== ''" [mdMenuTriggerFor]="appMenu" class="profile-pic" [src]="userImage$ | async">
+<md-menu #appMenu="mdMenu">
+  <button md-menu-item> Settings </button>
+  <button md-menu-item> Profile </button>
+  <div style="border-top-width: 1px; border-top-style: solid;"></div>
+  <button (click)="logout()" md-menu-item> Logout </button>
+</md-menu>

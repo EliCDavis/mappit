@@ -1,25 +1,2 @@
-<md-toolbar color="primary">
-  <h1>Mappit</h1>
-  <div fxFlex></div>
-  <button *ngIf="(sidenavMode | async) === 'over'" (click)="sidenavToggleClick$.next($event)" md-button> <md-icon svgIcon="menu"></md-icon> </button>
-  <button md-button *ngIf="(loggedIn$ | async) === false" (click)="login()">LOGIN</button>
-  <img *ngIf="(userImage$ | async) !== ''" [mdMenuTriggerFor]="appMenu" class="profile-pic" [src]="userImage$ | async">
-  <md-menu #appMenu="mdMenu">
-    <button md-menu-item> Settings </button>
-    <button md-menu-item> Profile </button>
-    <div style="border-top-width: 1px; border-top-style: solid;"></div>
-    <button (click)="logout()" md-menu-item> Logout </button>
-  </md-menu>
-</md-toolbar>
 
-<md-sidenav-container (backdropClick)="sidenavCloseRequest$.next($event)" fxFlex>
-  <md-sidenav [mode]='sidenavMode | async' [opened]="sidenavOpen$ | async" fxLayout="column" #sidenav>
-    <app-sidenav (routeClick)="sidenavCloseRequest$.next($event)" fxLayout="column" fxFlex></app-sidenav>
-  </md-sidenav>
-
-  <div style="height: 100%; display: flex">
-    <div id="Router-parent-thingy" style="display: flex; flex: 1; flex-direction:column; min-width: 0;">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</md-sidenav-container>
+<router-outlet></router-outlet>

@@ -1,0 +1,9 @@
+.profile-pic {
+    border-radius: 50%;
+    width: 40px;
+}
+
+.profile-pic:hover{
+    border-width: 2px;
+    border-style: solid;
+}

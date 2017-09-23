@@ -1,3 +1,4 @@
+import { TopologyService } from './map-view/topology/topology.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -5,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
 // Firebase
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 
@@ -31,6 +33,7 @@ import { AppComponent } from './app.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { MapViewComponent } from './map-view/map-view.component';
+import { LoginButtonComponent } from './login-button/login-button.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,7 @@ import { MapViewComponent } from './map-view/map-view.component';
     SidenavComponent,
     FrontpageComponent,
     MapViewComponent,
+    LoginButtonComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({
@@ -62,6 +66,7 @@ import { MapViewComponent } from './map-view/map-view.component';
       { path: 't/:name', component: MapViewComponent }
     ]),
 
+    // Firebase
     AngularFireModule.initializeApp({
       apiKey: "AIzaSyC77AJS7iHycOS1noZIe4LQGz3IqAzIq3M",
       authDomain: "mappit-4b1f0.firebaseapp.com",
@@ -71,8 +76,12 @@ import { MapViewComponent } from './map-view/map-view.component';
       messagingSenderId: "621290027934"
     }, 'mappit'),
     AngularFireAuthModule,
+    AngularFireDatabaseModule
   ],
-  providers: [AuthenticationService],
+  providers: [
+    AuthenticationService,
+    TopologyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
