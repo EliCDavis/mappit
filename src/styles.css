@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html {
+    height: 100%;
+    display: flex;
+    flex: 1 1 1e-09px;
+    -webkit-box-flex: 1;
+    box-sizing: border-box;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+}
+
+app-root,
+app-config,
+app-streams,
+app-upgrade,
+app-advanced-config,
+app-recordings,
+app-map-view,
+body {
+    font-family: Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    flex: 1 1 1e-09px;
+    margin: 0;
+}
