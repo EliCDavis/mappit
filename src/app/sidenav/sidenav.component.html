@@ -4,14 +4,29 @@
 </div>
 
 <md-accordion>
-  <md-expansion-panel style="margin:0px" hideToggle="true">
+  <md-expansion-panel (closed)="closeAddPost()" (opened)="openAddPost()" style="margin:0px" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title><b>Make Post</b></md-panel-title>
       <md-icon svgIcon="add">add</md-icon>
     </md-expansion-panel-header>
-    <p></p>
+
+    <div fxFlex fxLayout="column" [formGroup]="postCreationForm">
+      <p>Click anywhere on the map to place a marker. You can click somewhere else to change it's position.</p>
+      <md-form-field style="width:100%">
+        <input formControlName="title" mdInput placeholder="Title">
+        <md-error *ngIf="postCreationForm.get('title').errors">
+          Please provide a title
+        </md-error>
+      </md-form-field>
+      <md-form-field style="width:100%">
+        <textarea formControlName="content" mdInput placeholder="Text (optional)"></textarea>
+      </md-form-field>
+      <button (click)="post()" md-button [disabled]="postCreationForm.pristine || !postCreationForm.valid">Post</button>
+    </div>
+
   </md-expansion-panel>
-  <md-expansion-panel [expanded]="step !== null && step.getId() === post.getId()" (opened)="setStep(post)" style="margin:0px" *ngFor="let post of posts$ | async" hideToggle="true">
+  <md-expansion-panel [expanded]="step !== null && step.getId() === post.getId()" (opened)="setStep(post)" style="margin:0px"
+    *ngFor="let post of posts$ | async" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title [innerText]="post.getTitle()"></md-panel-title>
       <md-icon svgIcon="point">point</md-icon>

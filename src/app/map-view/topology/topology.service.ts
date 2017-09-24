@@ -10,9 +10,20 @@ export class TopologyService {
 
   topoUpdates$: Subject<firebase.database.DataSnapshot>;
 
-  constructor(db: AngularFireDatabase) {
+  todoCreatePostRequest$: Subject<any>;
+
+  constructor(private db: AngularFireDatabase) {
     this.topoUpdates$ = new Subject<any>();
     db.database.ref('topologys').on('value', (x) => this.topoUpdates$.next(x));
+    this.todoCreatePostRequest$ = new Subject<any>();
+  }
+
+  createPost(topo: string, title: string, content: string, mapData: any): firebase.database.ThenableReference {
+    return this.db.database.ref(`topologys/${topo}/posts`).push({
+      title: title,
+      content: content,
+      mapData: mapData
+    });
   }
 
   getTopology$(view: string): Observable<Topology> {

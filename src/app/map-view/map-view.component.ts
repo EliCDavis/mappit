@@ -17,7 +17,19 @@ export class MapViewComponent implements OnInit {
   topology$: Observable<Topology>;
   posts$: Observable<Array<Post>>;
 
-  mapClicks$: Subject<Post>;
+  mapClick$: Subject<{ lat: number, lng: number }>;
+
+  centerChange$: Subject<{ lat: number, lng: number }>;
+
+  postCreationLocation$: Observable<{ lat: number, lng: number }>;
+
+  postClicks$: Subject<Post>;
+
+  // What mode we're currently building a post under
+  postCreationMode$: Subject<string>;
+
+  // whether or not to display our point creation
+  displayCreationPoint: boolean;
 
   // Whenever the user has chosen a post without the map control
   postOpen$: Subject<Post>;
@@ -36,23 +48,37 @@ export class MapViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private topoService: TopologyService) {
 
+    this.postCreationMode$ = new Subject<string>();
+    this.displayCreationPoint = false;
+
+    this.mapClick$ = new Subject<{ lat: number, lng: number }>();
+
+    this.centerChange$ = new Subject<{ lat: number, lng: number }>();
+
+    this.postCreationLocation$ = this.centerChange$
+      .sample(this.postCreationMode$.filter(x => x !== ''))
+      .merge(this.mapClick$)
+      .startWith({ lat: 0, lng: 0 });
+
     // Two events that would warrent programatic change of map view
-    this.mapClicks$ = new Subject<Post>();
+    this.postClicks$ = new Subject<Post>();
     this.postOpen$ = new Subject<Post>();
 
-    const changeView$ = this.mapClicks$.merge(this.postOpen$); 
+    // Controlling lat and lon 
+    const changeView$ = this.postClicks$.merge(this.postOpen$);
     this.lat$ = changeView$.map(post => post.getLat());
     this.lon$ = changeView$.map(post => post.getLon());
-    
+
     this.sidenavToggleClick$ = new Subject<any>();
     this.sidenavCloseRequest$ = new Subject<any>();
 
-
+    // Stream of topology updates as the url changes
     this.topology$ = route.params
       .filter(url => url && url.name)
       .map(url => topoService.getTopology$(url.name))
       .switch()
 
+    // seperating posts from topo to make things easier
     this.posts$ = this.topology$
       .filter(x => x !== null)
       .map(topo => topo.getPosts());
@@ -81,11 +107,24 @@ export class MapViewComponent implements OnInit {
   }
 
   markerClick(post: Post) {
-    this.mapClicks$.next(post);
+    this.postClicks$.next(post);
   }
 
-  postOpen(post: Post){
+  postOpen(post: Post) {
     this.postOpen$.next(post);
+  }
+
+  centerChange(change) {
+    this.centerChange$.next(change);
+  }
+
+  postCreationMode(mode: string) {
+    this.postCreationMode$.next(mode);
+    this.displayCreationPoint = mode != '';
+  }
+
+  mapClick(a) {
+    this.mapClick$.next(a.coords);
   }
 
 }

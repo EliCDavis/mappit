@@ -1,6 +1,9 @@
+import { TopologyService } from '../map-view/topology/topology.service';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Post } from '../map-view/post';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-sidenav',
@@ -12,23 +15,45 @@ export class SidenavComponent implements OnInit {
   postsInput$: Subject<Array<Post>>;
 
   posts$: Observable<Array<Post>>;
-  
-  step: Post = new Post('','','','');
 
+  step: Post;
+
+  /**
+   * The posts to display as a list
+   */
   @Input()
   set posts(newPosts: Array<Post>) {
     this.postsInput$.next(newPosts);
     this.step = null;
   }
 
+  /**
+   * The name of the topography to display
+   */
   @Input() title: string;
+
+  /**
+   * The description of the topography to display
+   */
   @Input() description: string;
 
-  @Input() 
-  set mapClick(click:Subject<Post>) {
-    click.subscribe(x=> {
+  /**
+   * A stream of clicks on posts on the map
+   */
+  @Input()
+  set postClick(click: Subject<Post>) {
+    click.subscribe(x => {
       this.step = x;
-    });  
+    });
+  }
+
+  postCreationPoint$: Subject<{ lat: number, lng: number }>;
+
+  @Input()
+  set postCreationPoint(x: { lat: number, lng: number }) {
+    if (this.postCreationPoint$) {
+      this.postCreationPoint$.next(x);
+    }
   }
 
   /**
@@ -36,13 +61,44 @@ export class SidenavComponent implements OnInit {
    */
   @Output() onPostOpen = new EventEmitter<Post>();
 
-  constructor() { 
+  /**
+   * A new string is emmitted based on the type of post we want to make
+   * '' | 'point' | 'path' 
+   */
+  @Output() onPostCreationModeChange = new EventEmitter<string>();
+
+  postCreationForm: FormGroup;
+
+  postSubmission$: Subject<{ title: string, content: string }>;
+
+  constructor(private fb: FormBuilder, private topo: TopologyService) {
+
+    this.postSubmission$ = new Subject<{ title: string, content: string }>();
+
+    this.postCreationPoint$ = new Subject<{ lat: number, lng: number }>();
+
+    this.postCreationForm = fb.group({
+      title: ['', Validators.required],
+      content: ['']
+    });
+
     this.postsInput$ = new Subject<Array<Post>>();
 
     this.posts$ = this.postsInput$
       .filter(x => x !== null)
 
     this.posts$.subscribe(x => console.log(x));
+
+    this.postSubmission$
+      .combineLatest(this.postCreationPoint$, (a, b) => ({ ...a, mapData: { lat: b.lat, lon: b.lng, type: 'Point' } }))
+      .subscribe(x => {
+        this.topo.createPost(this.title, x.title, x.content, x.mapData)
+          .then(() => {
+            this.postCreationForm.reset();
+          })
+        console.log(x)
+      });
+
   }
 
   setStep(post) {
@@ -50,8 +106,14 @@ export class SidenavComponent implements OnInit {
     this.onPostOpen.next(post);
   }
 
-  ngOnInit() {
-    
+  openAddPost() { this.onPostCreationModeChange.next('point'); }
+  closeAddPost() { this.onPostCreationModeChange.next(''); }
+
+  post() {
+    console.log('posting...')
+    this.postSubmission$.next(this.postCreationForm.value);
   }
+
+  ngOnInit() { }
 
 }

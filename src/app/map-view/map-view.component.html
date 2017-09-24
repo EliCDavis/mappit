@@ -7,14 +7,16 @@
 
 <md-sidenav-container (backdropClick)="sidenavCloseRequest$.next($event)" fxFlex>
   <md-sidenav [mode]='sidenavMode | async' [opened]="sidenavOpen$ | async" fxLayout="column" #sidenav>
-    <app-sidenav (onPostOpen)="postOpen($event)" [mapClick]="mapClicks$ " [description]="(topology$|async)?.getDescription()" [title]="(topology$|async)?.getName()" [posts]="posts$ | async"
-      (routeClick)="sidenavCloseRequest$.next($event)" fxLayout="column" fxFlex></app-sidenav>
+    <app-sidenav [postCreationPoint]="postCreationLocation$ | async" (onPostCreationModeChange)="postCreationMode($event)" (onPostOpen)="postOpen($event)" [postClick]="postClicks$ "
+      [description]="(topology$|async)?.getDescription()" [title]="(topology$|async)?.getName()" [posts]="posts$ | async" (routeClick)="sidenavCloseRequest$.next($event)"
+      fxLayout="column" fxFlex></app-sidenav>
   </md-sidenav>
   <div style="height: 100%; display: flex">
     <div style="display: flex; flex: 1; flex-direction:column; min-width: 0;">
-      <agm-map style="height:100%" [zoom]="3" [latitude]="lat$|async" [longitude]="lon$|async">
+      <agm-map (centerChange)="centerChange($event)" (mapClick)="mapClick($event)" style="height:100%" [zoom]="3" [latitude]="lat$|async" [longitude]="lon$|async">
         <agm-marker *ngFor="let post of posts$ | async" [title]="post.getTitle()" (markerClick)="markerClick(post)" [latitude]="post.getLat()"
           [longitude]="post.getLon()"></agm-marker>
+        <agm-marker title="Your new post" [visible]="displayCreationPoint" [opacity]="0.6" [latitude]="(postCreationLocation$ | async)?.lat" [longitude]="(postCreationLocation$ | async)?.lng"></agm-marker>
       </agm-map>
     </div>
   </div>

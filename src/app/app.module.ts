@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { TopologyService } from './map-view/topology/topology.service';
 import { AuthenticationService } from './authentication/authentication.service';
@@ -25,7 +26,8 @@ import {
   MdToolbarModule,
   MdMenuModule,
   MdIconModule,
-  MdExpansionModule
+  MdExpansionModule,
+  MdInputModule
 } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -62,8 +64,10 @@ import { LoginButtonComponent } from './login-button/login-button.component';
     MdMenuModule,
     MdExpansionModule,
     MdIconModule,
+    MdInputModule,
 
     HttpModule,
+    ReactiveFormsModule,
 
     // Other Essentials
     FlexLayoutModule,
