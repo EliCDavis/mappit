@@ -1,3 +1,4 @@
+import { AuthenticationService } from '../authentication/authentication.service';
 import { TopologyService } from '../map-view/topology/topology.service';
 import { Observable, Subject } from 'rxjs/Rx';
 import { Post } from '../map-view/post';
@@ -71,7 +72,12 @@ export class SidenavComponent implements OnInit {
 
   postSubmission$: Subject<{ title: string, content: string }>;
 
-  constructor(private fb: FormBuilder, private topo: TopologyService) {
+  /**
+   * Whether or not to display the option to the user to create a post
+   */
+  displayCreatePost$: Observable<boolean>
+
+  constructor(private fb: FormBuilder, private topo: TopologyService, private auth: AuthenticationService) {
 
     this.postSubmission$ = new Subject<{ title: string, content: string }>();
 
@@ -93,11 +99,10 @@ export class SidenavComponent implements OnInit {
       .combineLatest(this.postCreationPoint$, (a, b) => ({ ...a, mapData: { lat: b.lat, lon: b.lng, type: 'Point' } }))
       .subscribe(x => {
         this.topo.createPost(this.title, x.title, x.content, x.mapData)
-          .then(() => {
-            this.postCreationForm.reset();
-          })
-        console.log(x)
+        this.postCreationForm.reset();
       });
+
+    this.displayCreatePost$ = this.auth.getUser$().map(x => x !== null);
 
   }
 
@@ -110,7 +115,6 @@ export class SidenavComponent implements OnInit {
   closeAddPost() { this.onPostCreationModeChange.next(''); }
 
   post() {
-    console.log('posting...')
     this.postSubmission$.next(this.postCreationForm.value);
   }
 

@@ -1,9 +1,13 @@
+import { User } from './user';
 export class Post {
+    
     constructor(
         private id: string,
         private title: string,
         private content: string,
-        private mapData: any
+        private mapData: any,
+        private user: User,
+        private date: Date
     ){}
 
     getId(): string{
@@ -24,6 +28,14 @@ export class Post {
 
     getLon(): number {
         return this.mapData.lon;
+    }
+
+    getDate(): Date {
+        return this.date;
+    }
+
+    getPoster(): User {
+        return this.user;
     }
 
 }
