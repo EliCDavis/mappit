@@ -27,7 +27,9 @@ import {
   MdMenuModule,
   MdIconModule,
   MdExpansionModule,
-  MdInputModule
+  MdInputModule,
+  MdDialogModule,
+  MdAutocompleteModule
 } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -39,6 +41,7 @@ import { FrontpageComponent } from './frontpage/frontpage.component';
 import { MapViewComponent } from './map-view/map-view.component';
 import { LoginButtonComponent } from './login-button/login-button.component';
 import { CreateTopoComponent } from './create-topo/create-topo.component';
+import { SelectTopoComponent } from './select-topo/select-topo.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import { CreateTopoComponent } from './create-topo/create-topo.component';
     MapViewComponent,
     LoginButtonComponent,
     CreateTopoComponent,
+    SelectTopoComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({
@@ -66,6 +70,8 @@ import { CreateTopoComponent } from './create-topo/create-topo.component';
     MdExpansionModule,
     MdIconModule,
     MdInputModule,
+    MdDialogModule,
+    MdAutocompleteModule,
 
     HttpModule,
     ReactiveFormsModule,
@@ -96,6 +102,10 @@ import { CreateTopoComponent } from './create-topo/create-topo.component';
     TopologyService,
     AuthGuard
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    SelectTopoComponent
+  ],
+
 })
 export class AppModule { }

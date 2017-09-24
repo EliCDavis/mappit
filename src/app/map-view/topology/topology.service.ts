@@ -93,7 +93,7 @@ export class TopologyService {
     return null;
   }
 
-  getTopology$(): Observable<any> {
+  getTopology$(): Observable<firebase.database.DataSnapshot> {
     return this.topoUpdates$
   }
 

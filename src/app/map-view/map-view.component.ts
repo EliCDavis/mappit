@@ -76,9 +76,8 @@ export class MapViewComponent implements OnInit {
     // Stream of topology updates as the url changes
     this.topology$ = topoService
       .getTopology$()
-      .combineLatest(this.route.params.do(x=>console.log(x)).filter(url => url && url.name), (x, url) => {
+      .combineLatest(this.route.params.filter(url => url && url.name), (x, url) => {
         const snapshot = x.child(url.name).toJSON() as any;
-        console.log('so...', x, url);
 
         // Make sure we're not trying to load a subreddit that doesn't exist
         if (snapshot === null) {
@@ -117,8 +116,6 @@ export class MapViewComponent implements OnInit {
           snapshot.description
         );
       });
-
-    this.topology$.subscribe(x => console.log('finally.. ', x))
 
     // seperating posts from topo to make things easier
     this.posts$ = this.topology$
