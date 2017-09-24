@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MdIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  constructor() { }
+  constructor(iconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon('add', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_add_circle_outline_black_24px.svg'));
+    iconRegistry.addSvgIcon('point', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_location_on_black_24px.svg'));
+  }
 
   ngOnInit() { }
 

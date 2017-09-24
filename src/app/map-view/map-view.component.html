@@ -7,11 +7,15 @@
 
 <md-sidenav-container (backdropClick)="sidenavCloseRequest$.next($event)" fxFlex>
   <md-sidenav [mode]='sidenavMode | async' [opened]="sidenavOpen$ | async" fxLayout="column" #sidenav>
-    <app-sidenav [posts]="posts$ | async" (routeClick)="sidenavCloseRequest$.next($event)" fxLayout="column" fxFlex></app-sidenav>
+    <app-sidenav (onPostOpen)="postOpen($event)" [mapClick]="mapClicks$ " [description]="(topology$|async)?.getDescription()" [title]="(topology$|async)?.getName()" [posts]="posts$ | async"
+      (routeClick)="sidenavCloseRequest$.next($event)" fxLayout="column" fxFlex></app-sidenav>
   </md-sidenav>
   <div style="height: 100%; display: flex">
-    <div id="Router-parent-thingy" style="display: flex; flex: 1; flex-direction:column; min-width: 0;">
-      <agm-map style="height:100%" [zoom]="3"></agm-map>
+    <div style="display: flex; flex: 1; flex-direction:column; min-width: 0;">
+      <agm-map style="height:100%" [zoom]="3" [latitude]="lat$|async" [longitude]="lon$|async">
+        <agm-marker *ngFor="let post of posts$ | async" [title]="post.getTitle()" (markerClick)="markerClick(post)" [latitude]="post.getLat()"
+          [longitude]="post.getLon()"></agm-marker>
+      </agm-map>
     </div>
   </div>
 </md-sidenav-container>

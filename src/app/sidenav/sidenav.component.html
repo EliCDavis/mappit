@@ -1,5 +1,21 @@
-<div style ="padding: 8px;">
-  <div *ngFor="let post of posts$ | async">
-    <h3 [innerText]="post.getTitle()"></h3>
-  </div>
+<div style="padding-left:8px;">
+  <h3 [innerText]="title"></h3>
+  <p [innerText]="description"></p>
 </div>
+
+<md-accordion>
+  <md-expansion-panel style="margin:0px" hideToggle="true">
+    <md-expansion-panel-header>
+      <md-panel-title><b>Make Post</b></md-panel-title>
+      <md-icon svgIcon="add">add</md-icon>
+    </md-expansion-panel-header>
+    <p></p>
+  </md-expansion-panel>
+  <md-expansion-panel [expanded]="step !== null && step.getId() === post.getId()" (opened)="setStep(post)" style="margin:0px" *ngFor="let post of posts$ | async" hideToggle="true">
+    <md-expansion-panel-header>
+      <md-panel-title [innerText]="post.getTitle()"></md-panel-title>
+      <md-icon svgIcon="point">point</md-icon>
+    </md-expansion-panel-header>
+    <p [innerText]="post.getContent()"></p>
+  </md-expansion-panel>
+</md-accordion>

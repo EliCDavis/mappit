@@ -13,12 +13,6 @@ export class LoginButtonComponent implements OnInit {
   userImage$: Observable<string>;
 
   constructor(private auth: AuthenticationService) {
-
-    auth.getUser$().subscribe(user => {
-      console.log('user: ', user);
-    });
-
-
     this.loggedIn$ = auth.getUser$().map(x => x !== null);
     this.userImage$ = auth.getUser$().map(user => user ? user.photoURL : '');
   }
@@ -30,6 +24,7 @@ export class LoginButtonComponent implements OnInit {
   logout() {
     this.auth.logout();
   }
+  
   ngOnInit() {
   }
 

@@ -37,7 +37,7 @@ export class TopologyService {
         }
       }
 
-      return new Topology(view, snapshot.owner, snapshot.subscribers, posts);
+      return new Topology(view, snapshot.owner, snapshot.subscribers, posts, snapshot.description);
     });
   }
 

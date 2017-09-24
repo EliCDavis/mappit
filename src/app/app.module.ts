@@ -1,3 +1,4 @@
+import { HttpModule } from '@angular/http';
 import { TopologyService } from './map-view/topology/topology.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,7 +23,9 @@ import {
   MdCheckboxModule,
   MdSidenavModule,
   MdToolbarModule,
-  MdMenuModule
+  MdMenuModule,
+  MdIconModule,
+  MdExpansionModule
 } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -57,6 +60,10 @@ import { LoginButtonComponent } from './login-button/login-button.component';
     MdSidenavModule,
     MdToolbarModule,
     MdMenuModule,
+    MdExpansionModule,
+    MdIconModule,
+
+    HttpModule,
 
     // Other Essentials
     FlexLayoutModule,
