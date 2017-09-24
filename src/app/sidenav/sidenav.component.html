@@ -51,7 +51,7 @@
       <md-panel-title [innerText]="post.getTitle()"></md-panel-title>
       <md-icon style="min-width:24px;" svgIcon="point">point</md-icon>
     </md-expansion-panel-header>
-    <p *ngIf="post.getContent() !== ''" [innerText]="post.getContent()"></p>
+    <markdown *ngIf="post.getContent() !== ''" [data]="post.getContent()"></markdown>
     <div fxLayout="row">
       <img [src]="post.getPoster().getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
       <div style="margin:5px" [innerText]="post.getPoster().getName()"></div>

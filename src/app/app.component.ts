@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
 
   constructor(iconRegistry: MdIconRegistry, sanitizer: DomSanitizer, auth: AuthenticationService) {
     iconRegistry.addSvgIcon('add', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_add_circle_outline_black_24px.svg'));
+    iconRegistry.addSvgIcon('menu', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_menu_white_24px.svg'));
     iconRegistry.addSvgIcon('point', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_location_on_black_24px.svg'));
     iconRegistry.addSvgIcon('starred', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_star_black_24px.svg'));
     iconRegistry.addSvgIcon('unstarred', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_star_border_black_24px.svg'));
