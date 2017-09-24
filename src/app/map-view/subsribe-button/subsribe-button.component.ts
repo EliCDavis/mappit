@@ -18,7 +18,6 @@ export class SubsribeButtonComponent {
 
   @Input()
   set topo(newTopo: string) {
-    console.log(newTopo);
     this.topo$.next(newTopo)
   }
 
@@ -28,7 +27,6 @@ export class SubsribeButtonComponent {
 
     this.subscribed$ = this.topo$
       .combineLatest(this.authService.getUser$(), (topo, user) => {
-        console.log(topo, user)
         if (user === null) {
           return null;
         }

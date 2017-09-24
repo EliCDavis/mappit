@@ -17,14 +17,12 @@ export class AuthenticationService {
 
     afAuth.authState
       .combineLatest(allUsers, (fbUser, restOfData) => {
-        console.log(restOfData);
         if (fbUser === null) {
           return null;
         }
         return restOfData && restOfData[fbUser.uid]? { ...fbUser, ...restOfData[fbUser.uid] } : fbUser;
       })
       .subscribe(x => {
-        console.log(x);
         this.user$.next(x)
       });
   }

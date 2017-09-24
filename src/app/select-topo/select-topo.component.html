@@ -2,14 +2,18 @@
   Select a Topography...
 </h3>
 
+<div fxLayout="column">
+  <u style="text-align: center">Starred</u>
+  <br>
+  <button md-button *ngFor="let star of this.starred$ | async" [innerText]="star" (click)="optionSelected(star)"></button>
+</div>
+
 <md-form-field class="example-full-width">
-  <input mdInput placeholder="Topology" aria-label="Topo" [mdAutocomplete]="auto" [formControl]="stateCtrl">
-  <md-autocomplete (optionSelected)="optionSelected($event)" #auto="mdAutocomplete">
+  <input mdInput placeholder="Search For Others..." aria-label="Topo" [mdAutocomplete]="auto" [formControl]="stateCtrl">
+  <md-autocomplete (optionSelected)="optionSelected($event.option.value)" #auto="mdAutocomplete">
     <md-option *ngFor="let state of filteredStates | async" [value]="state.name">
       <span>{{ state.name }}</span> |
       <small>{{state.posts}} posts</small>
     </md-option>
   </md-autocomplete>
 </md-form-field>
-
-Subbed:

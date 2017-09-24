@@ -1,3 +1,4 @@
+import { AuthenticationService } from '../authentication/authentication.service';
 import { Router } from '@angular/router';
 import { Topology } from '../map-view/topology/topology';
 import { TopologyService } from '../map-view/topology/topology.service';
@@ -15,7 +16,22 @@ export class SelectTopoComponent implements OnInit {
   stateCtrl: FormControl;
   filteredStates: Observable<any[]>;
 
-  constructor(private topo: TopologyService, private router: Router, public dialogRef: MdDialogRef<SelectTopoComponent>) {
+  starred$: Observable<Array<string>>;
+
+  constructor(
+    private topo: TopologyService, 
+    private router: Router,
+    public dialogRef: MdDialogRef<SelectTopoComponent>,
+    private auth: AuthenticationService
+  ) {
+
+    this.starred$ = auth.getUser$().map(x => {
+      if(x === null || !x.subscriptions){
+        return [];
+      }
+      return Object.keys(x.subscriptions);
+    });
+
     this.stateCtrl = new FormControl();
     this.filteredStates = this.stateCtrl.valueChanges
       .startWith(null)
@@ -41,7 +57,7 @@ export class SelectTopoComponent implements OnInit {
   }
 
   optionSelected(x) {
-    this.router.navigateByUrl('t/' + x.option.value);
+    this.router.navigateByUrl('t/' + x);
     this.dialogRef.close();
   }
 
