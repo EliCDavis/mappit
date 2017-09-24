@@ -1,5 +1,8 @@
 <div style="padding-left:8px;" *ngIf="topology !== null">
-  <h3 [innerText]="topology.getName()"></h3>
+  <div fxLayout="row" fxLayoutAlign="start center">
+      <app-subsribe-button *ngIf="displayCreatePost$ | async"  [topo]="topology.getName()"></app-subsribe-button>
+      <h3 [innerText]="topology.getName()"></h3>
+  </div>
   <p [innerText]="topology.getDescription()"></p>
   <div>Created by:</div>
   <div fxLayout="row">
@@ -8,7 +11,7 @@
     <div fxFlex></div>
     <div style="margin:5px; margin-right:15px;">{{topology.getDate() | date}}</div>
   </div>
-  <app-subsribe-button [topo]="topology.getName()"></app-subsribe-button>
+
 </div>
 
 <br>

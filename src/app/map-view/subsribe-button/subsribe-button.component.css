@@ -1,0 +1,7 @@
+.starred svg {
+    fill:yellow;
+}
+
+button {
+    min-width: 50px;
+}

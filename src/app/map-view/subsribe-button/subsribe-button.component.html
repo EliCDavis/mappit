@@ -1,2 +1,2 @@
-<button (click)="toggle($event)" md-button *ngIf="subscribed$ | async">Subscribed</button>
-<button (click)="toggle($event)" md-button *ngIf="(subscribed$ | async) === false">Subscribe</button>
+<button (click)="toggle($event)" md-button *ngIf="subscribed$ | async"><md-icon class="starred" svgIcon="starred">Subscribed</md-icon></button>
+<button (click)="toggle($event)" md-button *ngIf="(subscribed$ | async) === false"><md-icon svgIcon="unstarred">Subscribe</md-icon></button>
