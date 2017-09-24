@@ -3,20 +3,18 @@
     <app-subsribe-button *ngIf="displayCreatePost$ | async" [topo]="topology.getName()"></app-subsribe-button>
     <h3 [innerText]="topology.getName()"></h3>
   </div>
-  <p [innerText]="topology.getDescription()"></p>
-  <div>Created by:</div>
   <div fxLayout="row">
     <img [src]="topology.getOwner().getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
     <div style="margin:5px" [innerText]="topology.getOwner().getName()"></div>
     <div fxFlex></div>
     <div style="margin:5px; margin-right:15px;">{{topology.getDate() | date}}</div>
   </div>
-
+  <markdown [data]="topology.getDescription()"></markdown>
 </div>
 
 <br>
 <div *ngIf="topology === null">
-  <h4 style="margin:8px;">Topologys</h4>
+  <h4 style="margin:8px;">Topographies</h4>
   <div class="topo-option" fxLayout="row" *ngFor="let topo of topoOverview$ | async">
     <h5 style="margin:0px" fxLayoutAlign="start center" [innerText]="topo.name"></h5>
     <div fxFlex></div>
@@ -51,7 +49,7 @@
     *ngFor="let post of topology.getPosts()" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title [innerText]="post.getTitle()"></md-panel-title>
-      <md-icon svgIcon="point">point</md-icon>
+      <md-icon style="min-width:24px;" svgIcon="point">point</md-icon>
     </md-expansion-panel-header>
     <p *ngIf="post.getContent() !== ''" [innerText]="post.getContent()"></p>
     <div fxLayout="row">
@@ -62,7 +60,7 @@
     </div>
     <app-comment-section [topoName]="topology.getName()" [postId]="post.getId()" *ngIf="displayCreatePost$ | async"></app-comment-section>
     <md-card style="padding:8px; margin-top:8px;" *ngFor="let comment of post.getComments()">
-      <p [innerText]="comment.getComment()"></p>
+      <markdown [data]="comment.getComment()"></markdown>
       <div fxLayout="row">
         <img [src]="comment.getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
         <div style="margin:5px" [innerText]="comment.getUserDisplay()"></div>

@@ -8,6 +8,8 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
+import { MarkdownModule } from 'angular2-markdown';
+
 // Firebase
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -81,6 +83,8 @@ import { CommentSectionComponent } from './map-view/comment-section/comment-sect
 
     HttpModule,
     ReactiveFormsModule,
+
+    MarkdownModule.forRoot(),
 
     // Other Essentials
     FlexLayoutModule,
