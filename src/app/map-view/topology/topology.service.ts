@@ -18,7 +18,37 @@ export class TopologyService {
 
   createTopoRequest$: Subject<{ title: string, description: string }>;
 
+  subscribeToTopoRequest$: Subject<string>;
+  unsubscribeToTopoRequest$: Subject<string>;
+
   constructor(private db: AngularFireDatabase, private auth: AuthenticationService) {
+
+    this.subscribeToTopoRequest$ = new Subject<string>();
+    this.subscribeToTopoRequest$
+      .withLatestFrom(this.auth.getUser$(), (topo, user) => {
+        if (user === null) {
+          return null;
+        }
+        return { uid: user.uid, topo: topo }
+      })
+      .filter(x => x !== null)
+      .subscribe(x => {
+        this.db.database.ref(`users/${x.uid}/subscriptions`).update({ [x.topo]: x.topo });
+      });
+
+    this.unsubscribeToTopoRequest$ = new Subject<string>();
+    this.unsubscribeToTopoRequest$
+      .withLatestFrom(this.auth.getUser$(), (topo, user) => {
+        console.log(topo, user);
+        if (user === null) {
+          return null;
+        }
+        return { uid: user.uid, topo: topo }
+      })
+      .filter(x => x !== null)
+      .subscribe(x => {
+        this.db.database.ref(`users/${x.uid}/subscriptions/${x.topo}`).remove();
+      });
 
     // Watch all updates
     this.topoUpdates$ = new ReplaySubject<any>(1);
@@ -81,6 +111,20 @@ export class TopologyService {
       topo: topo
     });
     return null;
+  }
+
+  subscribeToTopo(topo) {
+    if (topo === null) {
+      return;
+    }
+    this.subscribeToTopoRequest$.next(topo);
+  }
+
+  unSubscribeToTopo(topo) {
+    if (topo === null) {
+      return;
+    }
+    this.unsubscribeToTopoRequest$.next(topo);
   }
 
   createTopography(title: string, description: string): string {

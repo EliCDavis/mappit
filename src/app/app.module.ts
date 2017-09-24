@@ -42,6 +42,7 @@ import { MapViewComponent } from './map-view/map-view.component';
 import { LoginButtonComponent } from './login-button/login-button.component';
 import { CreateTopoComponent } from './create-topo/create-topo.component';
 import { SelectTopoComponent } from './select-topo/select-topo.component';
+import { SubsribeButtonComponent } from './map-view/subsribe-button/subsribe-button.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { SelectTopoComponent } from './select-topo/select-topo.component';
     LoginButtonComponent,
     CreateTopoComponent,
     SelectTopoComponent,
+    SubsribeButtonComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({
