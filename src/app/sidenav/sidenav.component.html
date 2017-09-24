@@ -6,12 +6,12 @@
     <img [src]="topology.getOwner().getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
     <div style="margin:5px" [innerText]="topology.getOwner().getName()"></div>
     <div fxFlex></div>
-    <div style="margin:5px">{{topology.getDate() | date}}</div>
+    <div style="margin:5px; margin-right:15px;">{{topology.getDate() | date}}</div>
   </div>
 </div>
 
 <br>
-<md-accordion>
+<md-accordion *ngIf="topology !== null">
   <md-expansion-panel *ngIf="displayCreatePost$ | async" (closed)="closeAddPost()" (opened)="openAddPost()" style="margin:0px"
     hideToggle="true">
     <md-expansion-panel-header>
@@ -35,7 +35,7 @@
 
   </md-expansion-panel>
   <md-expansion-panel [expanded]="step !== null && step.getId() === post.getId()" (opened)="setStep(post)" style="margin:0px"
-    *ngFor="let post of posts$ | async" hideToggle="true">
+    *ngFor="let post of topology.getPosts()" hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title [innerText]="post.getTitle()"></md-panel-title>
       <md-icon svgIcon="point">point</md-icon>

@@ -1,3 +1,4 @@
+import { User } from './user';
 import { Topology } from './topology/topology';
 import { Post } from './post';
 import { TopologyService } from './topology/topology.service';
@@ -73,11 +74,51 @@ export class MapViewComponent implements OnInit {
     this.sidenavCloseRequest$ = new Subject<any>();
 
     // Stream of topology updates as the url changes
-    this.topology$ = route.params
-      .do(x=>console.log('topo: ', x))
-      .filter(url => url && url.name)
-      .map(url => topoService.getTopology$(url.name))
-      .switch()
+    this.topology$ = topoService
+      .getTopology$()
+      .combineLatest(this.route.params.do(x=>console.log(x)).filter(url => url && url.name), (x, url) => {
+        const snapshot = x.child(url.name).toJSON() as any;
+        console.log('so...', x, url);
+
+        // Make sure we're not trying to load a subreddit that doesn't exist
+        if (snapshot === null) {
+          return null;
+        }
+
+        // Build posts
+        const posts = new Array<Post>();
+        for (var property in snapshot.posts) {
+          if (snapshot.posts.hasOwnProperty(property)) {
+            posts.push(new Post(
+              property,
+              snapshot.posts[property].title,
+              snapshot.posts[property].content,
+              snapshot.posts[property].mapData,
+              new User(
+                snapshot.posts[property].uid,
+                snapshot.posts[property].user,
+                snapshot.posts[property].picUrl
+              ),
+              snapshot.posts[property].date
+            ));
+          }
+        }
+
+        return new Topology(
+          url.name,
+          new User(
+            snapshot.owner,
+            snapshot.ownerName,
+            snapshot.ownerPic
+          ),
+          new Date(snapshot.date),
+          snapshot.subscribers,
+          posts,
+          snapshot.description
+        );
+      });
+
+    this.topology$.subscribe(x => console.log('finally.. ', x))
 
     // seperating posts from topo to make things easier
     this.posts$ = this.topology$

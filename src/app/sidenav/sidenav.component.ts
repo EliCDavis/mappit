@@ -18,8 +18,7 @@ export class SidenavComponent implements OnInit {
 
   posts$: Observable<Array<Post>>;
 
-  step: Post;
-
+  step: Post = null;
 
   @Input() topology: Topology; 
 
