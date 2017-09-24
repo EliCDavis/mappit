@@ -20,7 +20,7 @@ export class SidenavComponent implements OnInit {
 
   step: Post = null;
 
-  @Input() topology: Topology; 
+  @Input() topology: Topology;
 
   /**
    * The posts to display as a list
@@ -70,7 +70,20 @@ export class SidenavComponent implements OnInit {
    */
   displayCreatePost$: Observable<boolean>
 
+  topoOverview$: Observable<Array<any>>;
+
   constructor(private fb: FormBuilder, private topo: TopologyService, private auth: AuthenticationService) {
+
+    this.topoOverview$ = topo.getTopology$()
+      .filter(x => x !== null)
+      .map(x => {
+        const snap = x.toJSON();
+        return Object.keys(snap).map(key => {
+          const posts = snap[key].posts ? Object.keys(snap[key].posts).length : 0;
+          return { name: key, posts: posts }
+        })
+      })
+
 
     this.postSubmission$ = new Subject<{ title: string, content: string }>();
 

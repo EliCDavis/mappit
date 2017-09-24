@@ -1,3 +1,11 @@
 :host{
     width: 300px;
 }
+
+.topo-option {
+    padding: 8px;
+}
+
+.topo-option:hover{
+    background-color: #f3f3f3;
+}

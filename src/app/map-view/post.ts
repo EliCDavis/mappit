@@ -7,7 +7,8 @@ export class Post {
         private content: string,
         private mapData: any,
         private user: User,
-        private date: Date
+        private date: Date,
+        private topo: string
     ){}
 
     getId(): string{
@@ -36,6 +37,10 @@ export class Post {
 
     getPoster(): User {
         return this.user;
+    }
+
+    getTopoName(): string {
+        return this.topo;
     }
 
 }

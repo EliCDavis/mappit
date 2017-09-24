@@ -15,6 +15,15 @@
 </div>
 
 <br>
+<div *ngIf="topology === null">
+  <h4 style="margin:8px;">Topologys</h4>
+  <div class="topo-option" fxLayout="row" *ngFor="let topo of topoOverview$ | async">
+    <h5 style="margin:0px" fxLayoutAlign="start center" [innerText]="topo.name"></h5>
+    <div fxFlex></div>
+    <button md-button [routerLink]="'/t/' + topo.name">View</button>
+  </div>
+</div>
+
 <md-accordion *ngIf="topology !== null">
   <md-expansion-panel *ngIf="displayCreatePost$ | async" (closed)="closeAddPost()" (opened)="openAddPost()" style="margin:0px"
     hideToggle="true">

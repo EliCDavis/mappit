@@ -2,8 +2,8 @@ import { User } from './user';
 import { Topology } from './topology/topology';
 import { Post } from './post';
 import { TopologyService } from './topology/topology.service';
-import { Observable, Subject } from 'rxjs/Rx';
-import { ActivatedRoute } from '@angular/router';
+import { Observable, ReplaySubject, Subject } from 'rxjs/Rx';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -47,7 +47,7 @@ export class MapViewComponent implements OnInit {
   sidenavToggleClick$: Subject<any>;
   sidenavCloseRequest$: Subject<any>;
 
-  constructor(private route: ActivatedRoute, private topoService: TopologyService) {
+  constructor(private route: ActivatedRoute, private router: Router, private topoService: TopologyService) {
 
     this.postCreationMode$ = new Subject<string>();
     this.displayCreationPoint = false;
@@ -55,6 +55,13 @@ export class MapViewComponent implements OnInit {
     this.mapClick$ = new Subject<{ lat: number, lng: number }>();
 
     this.centerChange$ = new Subject<{ lat: number, lng: number }>();
+
+    const fromGeoLoc$ = new ReplaySubject<{ lat: number, lng: number }>();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        fromGeoLoc$.next({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      });
+    }
 
     this.postCreationLocation$ = this.centerChange$
       .sample(this.postCreationMode$.filter(x => x !== ''))
@@ -67,11 +74,49 @@ export class MapViewComponent implements OnInit {
 
     // Controlling lat and lon 
     const changeView$ = this.postClicks$.merge(this.postOpen$);
-    this.lat$ = changeView$.map(post => post.getLat());
-    this.lon$ = changeView$.map(post => post.getLon());
-
+    this.lat$ = changeView$
+      .map(post => post.getLat())
+      .merge(fromGeoLoc$.map(x => x.lat));
+    this.lon$ = changeView$
+      .map(post => post.getLon())
+      .merge(fromGeoLoc$.map(x=> x.lng));
+      
     this.sidenavToggleClick$ = new Subject<any>();
     this.sidenavCloseRequest$ = new Subject<any>();
+
+    let allPosts$ = topoService
+      .getTopology$()
+      .combineLatest(this.route.params, (topos, url) => {
+        if (url && url.name) {
+          return null;
+        }
+        const snapshot = topos.toJSON() as any;
+        const posts = new Array<Post>();
+        Object.keys(snapshot).map(topo => {
+          const t = snapshot[topo];
+          for (var property in t.posts) {
+            if (t.posts.hasOwnProperty(property)) {
+              posts.push(new Post(
+                property,
+                t.posts[property].title,
+                t.posts[property].content,
+                t.posts[property].mapData,
+                new User(
+                  t.posts[property].uid,
+                  t.posts[property].user,
+                  t.posts[property].picUrl
+                ),
+                t.posts[property].date,
+                topo
+              ));
+            }
+          }
+
+        })
+
+        return posts;
+      })
+
 
     // Stream of topology updates as the url changes
     this.topology$ = topoService
@@ -98,7 +143,8 @@ export class MapViewComponent implements OnInit {
                 snapshot.posts[property].user,
                 snapshot.posts[property].picUrl
               ),
-              snapshot.posts[property].date
+              snapshot.posts[property].date,
+              url.name
             ));
           }
         }
@@ -120,7 +166,8 @@ export class MapViewComponent implements OnInit {
     // seperating posts from topo to make things easier
     this.posts$ = this.topology$
       .filter(x => x !== null)
-      .map(topo => topo.getPosts());
+      .map(topo => topo.getPosts())
+      .merge(allPosts$.filter(x => x !== null));
   }
 
   ngOnInit() {
@@ -146,6 +193,11 @@ export class MapViewComponent implements OnInit {
   }
 
   markerClick(post: Post) {
+    if (this.route.snapshot.url.length < 2) {
+      setTimeout(() => {
+        this.router.navigateByUrl('t/' + post.getTopoName())
+      }, 1)
+    }
     this.postClicks$.next(post);
   }
 

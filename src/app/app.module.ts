@@ -81,7 +81,11 @@ import { SubsribeButtonComponent } from './map-view/subsribe-button/subsribe-but
     // Other Essentials
     FlexLayoutModule,
     RouterModule.forRoot([
-      { path: '', component: FrontpageComponent },
+      {
+        path: '',
+        redirectTo: '/t',
+        pathMatch: 'full'
+      },
       { path: 'new-topo', component: CreateTopoComponent, canActivate: [AuthGuard] },
       { path: 't', component: MapViewComponent },
       { path: 't/:name', component: MapViewComponent }
