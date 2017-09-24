@@ -89,7 +89,7 @@ export class SidenavComponent implements OnInit {
     this.posts$.subscribe(x => console.log(x));
 
     this.postSubmission$
-      .combineLatest(this.postCreationPoint$, (a, b) => ({ ...a, mapData: { lat: b.lat, lon: b.lng, type: 'Point' } }))
+      .withLatestFrom(this.postCreationPoint$, (a, b) => ({ ...a, mapData: { lat: b.lat, lon: b.lng, type: 'Point' } }))
       .subscribe(x => {
         this.topo.createPost(this.topology.getName(), x.title, x.content, x.mapData)
         this.postCreationForm.reset();
