@@ -1,7 +1,7 @@
 <div style="padding-left:8px;" *ngIf="topology !== null">
   <div fxLayout="row" fxLayoutAlign="start center">
-      <app-subsribe-button *ngIf="displayCreatePost$ | async"  [topo]="topology.getName()"></app-subsribe-button>
-      <h3 [innerText]="topology.getName()"></h3>
+    <app-subsribe-button *ngIf="displayCreatePost$ | async" [topo]="topology.getName()"></app-subsribe-button>
+    <h3 [innerText]="topology.getName()"></h3>
   </div>
   <p [innerText]="topology.getDescription()"></p>
   <div>Created by:</div>
@@ -60,5 +60,15 @@
       <div fxFlex></div>
       <div style="margin:5px">{{post.getDate() | date}}</div>
     </div>
+    <app-comment-section [topoName]="topology.getName()" [postId]="post.getId()" *ngIf="displayCreatePost$ | async"></app-comment-section>
+    <md-card style="padding:8px; margin-top:8px;" *ngFor="let comment of post.getComments()">
+      <p [innerText]="comment.getComment()"></p>
+      <div fxLayout="row">
+        <img [src]="comment.getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
+        <div style="margin:5px" [innerText]="comment.getUserDisplay()"></div>
+        <div fxFlex></div>
+        <div style="margin:5px">{{comment.getDate() | date}}</div>
+      </div>
+    </md-card>
   </md-expansion-panel>
 </md-accordion>

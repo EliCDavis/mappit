@@ -29,7 +29,8 @@ import {
   MdExpansionModule,
   MdInputModule,
   MdDialogModule,
-  MdAutocompleteModule
+  MdAutocompleteModule,
+  MatCardModule
 } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -43,6 +44,7 @@ import { LoginButtonComponent } from './login-button/login-button.component';
 import { CreateTopoComponent } from './create-topo/create-topo.component';
 import { SelectTopoComponent } from './select-topo/select-topo.component';
 import { SubsribeButtonComponent } from './map-view/subsribe-button/subsribe-button.component';
+import { CommentSectionComponent } from './map-view/comment-section/comment-section.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { SubsribeButtonComponent } from './map-view/subsribe-button/subsribe-but
     CreateTopoComponent,
     SelectTopoComponent,
     SubsribeButtonComponent,
+    CommentSectionComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({
@@ -74,6 +77,7 @@ import { SubsribeButtonComponent } from './map-view/subsribe-button/subsribe-but
     MdInputModule,
     MdDialogModule,
     MdAutocompleteModule,
+    MatCardModule,
 
     HttpModule,
     ReactiveFormsModule,

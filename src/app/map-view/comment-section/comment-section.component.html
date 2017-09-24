@@ -1,0 +1,7 @@
+<md-card style="width:100%; padding:8px; margin-top:8px;"  fxFlex fxLayout="column" fxLayoutAlign="center center">
+  <h4 style="margin-bottom:0px; margin-top:8px;">Leave Comment</h4>
+  <md-form-field style="width:100%;">
+    <textarea style="padding: 0px" [formControl]="commentForm" mdInput placeholder="Comment"></textarea>
+  </md-form-field>
+  <button (click)="comment()" color="primary" [disabled]="commentForm.pristine || !commentForm.valid" md-button>COMMENT</button>
+</md-card>

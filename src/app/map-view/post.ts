@@ -1,3 +1,4 @@
+import { Comment } from './comment';
 import { User } from './user';
 export class Post {
     
@@ -8,7 +9,8 @@ export class Post {
         private mapData: any,
         private user: User,
         private date: Date,
-        private topo: string
+        private topo: string,
+        private comments: Array<Comment>
     ){}
 
     getId(): string{
@@ -41,6 +43,10 @@ export class Post {
 
     getTopoName(): string {
         return this.topo;
+    }
+
+    getComments(): Array<Comment> {
+        return this.comments;
     }
 
 }

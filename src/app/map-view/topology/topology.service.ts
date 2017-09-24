@@ -21,7 +21,27 @@ export class TopologyService {
   subscribeToTopoRequest$: Subject<string>;
   unsubscribeToTopoRequest$: Subject<string>;
 
+  commentRequest$: Subject<{ topo: string, post: string, content: string }>;
+
   constructor(private db: AngularFireDatabase, private auth: AuthenticationService) {
+
+    this.commentRequest$ = new Subject<{ topo: string, post: string, content: string }>();
+    this.commentRequest$
+      .withLatestFrom(this.auth.getUser$(), (comment, user) => {
+        if (user === null) {
+          return null;
+        }
+        return { user: user.displayName, picUrl: user.photoURL , comment }
+      })
+      .filter(x => x !== null)
+      .subscribe(x => {
+        this.db.database.ref(`topologys/${x.comment.topo}/posts/${x.comment.post}/comments`).push({
+          comment: x.comment.content,
+          date: Date.now(),
+          picUrl: x.picUrl,
+          user: x.user
+        });
+      });
 
     this.subscribeToTopoRequest$ = new Subject<string>();
     this.subscribeToTopoRequest$
@@ -111,6 +131,11 @@ export class TopologyService {
       topo: topo
     });
     return null;
+  }
+
+
+  comment(topo: string, post: string, content: string) {
+    this.commentRequest$.next({ topo, post, content });
   }
 
   subscribeToTopo(topo) {

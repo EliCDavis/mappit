@@ -1,3 +1,4 @@
+import { Comment } from './comment';
 import { User } from './user';
 import { Topology } from './topology/topology';
 import { Post } from './post';
@@ -79,8 +80,8 @@ export class MapViewComponent implements OnInit {
       .merge(fromGeoLoc$.map(x => x.lat));
     this.lon$ = changeView$
       .map(post => post.getLon())
-      .merge(fromGeoLoc$.map(x=> x.lng));
-      
+      .merge(fromGeoLoc$.map(x => x.lng));
+
     this.sidenavToggleClick$ = new Subject<any>();
     this.sidenavCloseRequest$ = new Subject<any>();
 
@@ -107,7 +108,8 @@ export class MapViewComponent implements OnInit {
                   t.posts[property].picUrl
                 ),
                 t.posts[property].date,
-                topo
+                topo,
+                []
               ));
             }
           }
@@ -144,7 +146,8 @@ export class MapViewComponent implements OnInit {
                 snapshot.posts[property].picUrl
               ),
               snapshot.posts[property].date,
-              url.name
+              url.name,
+              this.buildComments(snapshot.posts[property])
             ));
           }
         }
@@ -168,6 +171,28 @@ export class MapViewComponent implements OnInit {
       .filter(x => x !== null)
       .map(topo => topo.getPosts())
       .merge(allPosts$.filter(x => x !== null));
+  }
+
+  buildComments(post): Array<Comment> {
+    if (!post || !post.comments) {
+      return [];
+    }
+
+    const comments = new Array<Comment>();
+
+    for (var property in post.comments) {
+      if (post.comments.hasOwnProperty(property)) {
+        comments.push(new Comment(
+          post.comments[property].comment,
+          new Date(post.comments[property].date),
+          post.comments[property].picUrl,
+          post.comments[property].user
+        ));
+      }
+    }
+
+    console.log('comments: ', comments);
+    return comments;
   }
 
   ngOnInit() {
