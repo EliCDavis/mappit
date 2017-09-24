@@ -1,3 +1,4 @@
+import { AuthGuard } from './auth.guard';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { TopologyService } from './map-view/topology/topology.service';
@@ -17,7 +18,6 @@ import {
   AgmCoreModule
 } from '@agm/core';
 
-
 // Material
 import {
   MdButtonModule,
@@ -32,13 +32,13 @@ import {
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-
 // Personal Styling
 import { AppComponent } from './app.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { FrontpageComponent } from './frontpage/frontpage.component';
 import { MapViewComponent } from './map-view/map-view.component';
 import { LoginButtonComponent } from './login-button/login-button.component';
+import { CreateTopoComponent } from './create-topo/create-topo.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +47,7 @@ import { LoginButtonComponent } from './login-button/login-button.component';
     FrontpageComponent,
     MapViewComponent,
     LoginButtonComponent,
+    CreateTopoComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({
@@ -73,6 +74,7 @@ import { LoginButtonComponent } from './login-button/login-button.component';
     FlexLayoutModule,
     RouterModule.forRoot([
       { path: '', component: FrontpageComponent },
+      { path: 'new-topo', component: CreateTopoComponent, canActivate: [AuthGuard] },
       { path: 't', component: MapViewComponent },
       { path: 't/:name', component: MapViewComponent }
     ]),
@@ -91,7 +93,8 @@ import { LoginButtonComponent } from './login-button/login-button.component';
   ],
   providers: [
     AuthenticationService,
-    TopologyService
+    TopologyService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

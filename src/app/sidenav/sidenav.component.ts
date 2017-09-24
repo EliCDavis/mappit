@@ -1,3 +1,4 @@
+import { Topology } from '../map-view/topology/topology';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { TopologyService } from '../map-view/topology/topology.service';
 import { Observable, Subject } from 'rxjs/Rx';
@@ -19,6 +20,9 @@ export class SidenavComponent implements OnInit {
 
   step: Post;
 
+
+  @Input() topology: Topology; 
+
   /**
    * The posts to display as a list
    */
@@ -27,16 +31,6 @@ export class SidenavComponent implements OnInit {
     this.postsInput$.next(newPosts);
     this.step = null;
   }
-
-  /**
-   * The name of the topography to display
-   */
-  @Input() title: string;
-
-  /**
-   * The description of the topography to display
-   */
-  @Input() description: string;
 
   /**
    * A stream of clicks on posts on the map
@@ -98,7 +92,7 @@ export class SidenavComponent implements OnInit {
     this.postSubmission$
       .combineLatest(this.postCreationPoint$, (a, b) => ({ ...a, mapData: { lat: b.lat, lon: b.lng, type: 'Point' } }))
       .subscribe(x => {
-        this.topo.createPost(this.title, x.title, x.content, x.mapData)
+        this.topo.createPost(this.topology.getName(), x.title, x.content, x.mapData)
         this.postCreationForm.reset();
       });
 

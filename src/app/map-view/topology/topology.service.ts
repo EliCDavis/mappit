@@ -10,18 +10,48 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class TopologyService {
 
+  lastTopoSnapshot: firebase.database.DataSnapshot;
+
   topoUpdates$: Subject<firebase.database.DataSnapshot>;
 
   createPostRequest$: Subject<{ topo: string, title: string, content: string, mapData: any }>;
+
+  createTopoRequest$: Subject<{ title: string, description: string }>;
 
   constructor(private db: AngularFireDatabase, private auth: AuthenticationService) {
 
     // Watch all updates
     this.topoUpdates$ = new Subject<any>();
-    db.database.ref('topologys').on('value', (x) => this.topoUpdates$.next(x));
+    db.database.ref('topologys').on('value', (x) => {
+      this.lastTopoSnapshot = x;
+      this.topoUpdates$.next(x)
+    });
+
+    this.createTopoRequest$ = new Subject<{ title: string, description: string }>();
+    this.createTopoRequest$
+      .withLatestFrom(this.auth.getUser$(), (a, b) => {
+        if (b == null) {
+          return;
+        }
+        return {
+          name: a.title,
+          details: {
+            date: Date.now(),
+            owner: b.uid,
+            ownerName: b.displayName,
+            ownerPic: b.photoURL,
+            description: a.description,
+            subscribers: { [b.uid]: b.displayName },
+            posts: {}
+          }
+        }
+      })
+      .filter(u => u !== null)
+      .subscribe(x => {
+        this.db.database.ref(`topologys/${x.name}`).set(x.details)
+      });
 
     this.createPostRequest$ = new Subject<{ topo: string, title: string, content: string, mapData: any }>();
-
     this.createPostRequest$
       .withLatestFrom(this.auth.getUser$(), (a, b) => {
         if (b == null) {
@@ -50,7 +80,17 @@ export class TopologyService {
       mapData: mapData,
       topo: topo
     });
-    //return this.db.database.ref(`topologys/${topo}/posts`).push();
+    return null;
+  }
+
+  createTopography(title: string, description: string): string {
+    if (this.lastTopoSnapshot.child(title).exists()) {
+      return 'This topography already exists!';
+    }
+    this.createTopoRequest$.next({
+      title: title, description: description
+    });
+    return null;
   }
 
   getTopology$(view: string): Observable<Topology> {
@@ -66,7 +106,6 @@ export class TopologyService {
       const posts = new Array<Post>();
       for (var property in snapshot.posts) {
         if (snapshot.posts.hasOwnProperty(property)) {
-          console.log(snapshot.posts[property]);
           posts.push(new Post(
             property,
             snapshot.posts[property].title,
@@ -82,7 +121,18 @@ export class TopologyService {
         }
       }
 
-      return new Topology(view, snapshot.owner, snapshot.subscribers, posts, snapshot.description);
+      return new Topology(
+        view,
+        new User(
+          snapshot.owner,
+          snapshot.ownerName,
+          snapshot.ownerPic
+        ),
+        new Date(snapshot.date),
+        snapshot.subscribers,
+        posts,
+        snapshot.description
+      );
     });
   }
 

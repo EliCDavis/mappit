@@ -1,3 +1,4 @@
+import { AuthenticationService } from './authentication/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { MdIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -9,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AppComponent implements OnInit {
 
-  constructor(iconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {
+  constructor(iconRegistry: MdIconRegistry, sanitizer: DomSanitizer, auth: AuthenticationService) {
     iconRegistry.addSvgIcon('add', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_add_circle_outline_black_24px.svg'));
     iconRegistry.addSvgIcon('point', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_location_on_black_24px.svg'));
   }

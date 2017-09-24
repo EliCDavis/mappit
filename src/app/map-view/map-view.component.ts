@@ -74,6 +74,7 @@ export class MapViewComponent implements OnInit {
 
     // Stream of topology updates as the url changes
     this.topology$ = route.params
+      .do(x=>console.log('topo: ', x))
       .filter(url => url && url.name)
       .map(url => topoService.getTopology$(url.name))
       .switch()

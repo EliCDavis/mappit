@@ -1,10 +1,19 @@
-<div style="padding-left:8px;">
-  <h3 [innerText]="title"></h3>
-  <p [innerText]="description"></p>
+<div style="padding-left:8px;" *ngIf="topology !== null">
+  <h3 [innerText]="topology.getName()"></h3>
+  <p [innerText]="topology.getDescription()"></p>
+  <div>Created by:</div>
+  <div fxLayout="row">
+    <img [src]="topology.getOwner().getPicUrl()" style="border-radius:50%; width:25px; height:25px;">
+    <div style="margin:5px" [innerText]="topology.getOwner().getName()"></div>
+    <div fxFlex></div>
+    <div style="margin:5px">{{topology.getDate() | date}}</div>
+  </div>
 </div>
 
+<br>
 <md-accordion>
-  <md-expansion-panel *ngIf="displayCreatePost$ | async" (closed)="closeAddPost()" (opened)="openAddPost()" style="margin:0px" hideToggle="true">
+  <md-expansion-panel *ngIf="displayCreatePost$ | async" (closed)="closeAddPost()" (opened)="openAddPost()" style="margin:0px"
+    hideToggle="true">
     <md-expansion-panel-header>
       <md-panel-title><b>Make Post</b></md-panel-title>
       <md-icon svgIcon="add">add</md-icon>

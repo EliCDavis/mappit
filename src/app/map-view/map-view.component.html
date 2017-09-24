@@ -8,7 +8,7 @@
 <md-sidenav-container (backdropClick)="sidenavCloseRequest$.next($event)" fxFlex>
   <md-sidenav [mode]='sidenavMode | async' [opened]="sidenavOpen$ | async" fxLayout="column" #sidenav>
     <app-sidenav [postCreationPoint]="postCreationLocation$ | async" (onPostCreationModeChange)="postCreationMode($event)" (onPostOpen)="postOpen($event)" [postClick]="postClicks$ "
-      [description]="(topology$|async)?.getDescription()" [title]="(topology$|async)?.getName()" [posts]="posts$ | async" (routeClick)="sidenavCloseRequest$.next($event)"
+      [topology]="topology$ | async" (routeClick)="sidenavCloseRequest$.next($event)"
       fxLayout="column" fxFlex></app-sidenav>
   </md-sidenav>
   <div style="height: 100%; display: flex">

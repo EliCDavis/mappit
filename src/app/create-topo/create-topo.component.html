@@ -1,0 +1,14 @@
+<div fxFlex fxLayoutGap="16px" fxLayout="column" [formGroup]="topoForm" fxLayoutAlign="center center">
+  <h1>Create Topography</h1>
+  <img style="width:100px; height:100px; border-radius: 50%" [src]="profileUrl$ | async">
+  <md-form-field>
+    <input formControlName="title" mdInput placeholder="Title">
+    <md-error *ngIf="topoForm.get('title').errors">
+      Please provide a title between 4 and 32 *letters*
+    </md-error>
+  </md-form-field>
+  <md-form-field>
+    <textarea formControlName="description" mdInput placeholder="Description"></textarea>
+  </md-form-field>
+  <button (click)="createTopo()" color="primary" [disabled]="topoForm.pristine || !topoForm.valid" md-button>CREATE</button>
+</div>
